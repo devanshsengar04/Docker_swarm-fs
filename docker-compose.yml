@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: my-frontend
+    ports:
+      - "3000:80"
+    networks:
+      - app-net
+    depends_on:
+      - backend
+
+  backend:
+    image: my-backend
+    ports:
+      - "5000:5000"
+    networks:
+      - app-net
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: overlay
+
+volumes:
+  mongo_data:
